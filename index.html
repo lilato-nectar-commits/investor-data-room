@@ -2217,6 +2217,18 @@ const MEMO = {
 const fmt = v => v >= 1e6 ? `$${(v/1e6).toFixed(2)}M` : v >= 1e3 ? `$${(v/1e3).toFixed(0)}K` : `$${v.toFixed(0)}`;
 const fmtPct = v => `${v.toFixed(1)}%`;
 const fmtNum = v => v.toLocaleString('en-US',{maximumFractionDigits:1});
+// Format a bullet point: splits "Title — body" into <b>Title</b> — body.
+// If no " — " separator, uses fallbackLabel as the bold prefix (or shows plain text).
+function fmtBullet(text, fallbackLabel) {
+  const sep = text.indexOf(' — ');
+  if (sep !== -1) {
+    const title = text.substring(0, sep).trim();
+    const body = text.substring(sep + 3).trim();
+    return `<b>${title}</b> — ${body}`;
+  }
+  if (fallbackLabel) return `<b>${fallbackLabel}</b> — ${text}`;
+  return text;
+}
 
 // Projected total return for open deals = collected + outstanding + remaining projected income
 function projTotal(d) {
@@ -2580,18 +2592,14 @@ function openOP(deal) {
   const statusLabel = deal.status === 'Closed' ? 'Closed' : isDQ ? 'Watch' : 'Performing';
 
   // Photo: runtime uploads take priority, then /images/ folder
-  const photoSrc = DEAL_PHOTOS[deal.id] || PHOTO_MAP[deal.id] || null;
-  const photoHTML = photoSrc
-    ? `<img src="${photoSrc}" style="width:100%;height:100%;object-fit:cover" alt="Property photo"
-         onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
-       <div style="display:none;width:100%;height:100%;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,#01041D,#3302F7);gap:6px">
-         <span style="font-size:48px">${AICO[deal.asset]||'🏢'}</span>
-         <span style="font-size:10px;color:rgba(255,255,255,0.5);font-family:'Manrope',monospace">${city} · ${deal.asset}</span>
-       </div>`
-    : `<div style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,#01041D,#3302F7);gap:6px">
-         <span style="font-size:48px">${AICO[deal.asset]||'🏢'}</span>
-         <span style="font-size:10px;color:rgba(255,255,255,0.5);font-family:'Manrope',monospace">${city} · ${deal.asset}</span>
-       </div>`;
+  // Every deal tries its photo: runtime uploads → PHOTO_MAP → default images/{id}.png
+  const photoSrc = DEAL_PHOTOS[deal.id] || PHOTO_MAP[deal.id] || `images/${deal.id}.png`;
+  const photoHTML = `<img src="${photoSrc}" style="width:100%;height:100%;object-fit:cover" alt="Property photo"
+       onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+     <div style="display:none;width:100%;height:100%;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,#01041D,#3302F7);gap:6px">
+       <span style="font-size:48px">${AICO[deal.asset]||'🏢'}</span>
+       <span style="font-size:10px;color:rgba(255,255,255,0.5);font-family:'Manrope',monospace">${city} · ${deal.asset}</span>
+     </div>`;
 
   // Strengths / risks
   const s1 = m.strength1 || `Projected IRR of ${deal.irr}% with DSCR of ${deal.dscr}x`;
@@ -2680,15 +2688,15 @@ function openOP(deal) {
           <div class="op-card">
             <div class="op-ct">Why We Like This Deal</div>
             <ul>
-              <li><b>${s1.split(' ').slice(0,3).join(' ')}</b> — ${s1}</li>
-              <li><b>${s2.split(' ').slice(0,3).join(' ')}</b> — ${s2}</li>
+              <li>${fmtBullet(s1)}</li>
+              <li>${fmtBullet(s2)}</li>
             </ul>
           </div>
           <div class="op-card">
             <div class="op-ct">Risks &amp; Mitigation</div>
             <ul>
-              <li><b>Risk</b> — ${r1}<br><span style="color:#971BFF;font-size:9px">↳ ${mit1}</span></li>
-              <li><b>Risk</b> — ${r2}<br><span style="color:#971BFF;font-size:9px">↳ ${mit2}</span></li>
+              <li>${fmtBullet(r1, 'Risk')}<br><span style="color:#971BFF;font-size:9px">↳ ${mit1}</span></li>
+              <li>${fmtBullet(r2, 'Risk')}<br><span style="color:#971BFF;font-size:9px">↳ ${mit2}</span></li>
             </ul>
           </div>
         </div>
