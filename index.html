@@ -3434,6 +3434,10 @@ function renderDealDetail(lid) {
       },
       options: {
         ...PA_CHART_DEFAULTS,
+        plugins: {
+          ...PA_CHART_DEFAULTS.plugins,
+          tooltip: { callbacks: { label: ctx => ` ${ctx.dataset.label}: $${ctx.raw.toLocaleString('en-US')}` } }
+        },
         scales: {
           x: {
             ...PA_CHART_DEFAULTS.scales.x,
