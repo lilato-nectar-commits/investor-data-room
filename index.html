@@ -2979,10 +2979,11 @@ applyFilters();
             color: '#5A6A8A',
             font: { size: 10 },
             maxRotation: 45,
-            maxTicksLimit: 12,
+            maxTicksLimit: 16,
             callback: function(val, i) {
               const label = this.getLabelForValue(val);
-              if (label.endsWith('-01') || label.endsWith('-07')) return label;
+              const mo = parseInt(label.split('-')[1]);
+              if (mo === 1 || mo === 5 || mo === 9) return label;
               return '';
             }
           }
