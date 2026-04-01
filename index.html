@@ -734,20 +734,24 @@ tbody tr { cursor: pointer; }
   </div>
   <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:42px">
     <div style="background:white;border:1px solid var(--border);border-radius:12px;padding:24px;border-top:3px solid #971BFF">
-      <div style="font-size:28px;margin-bottom:12px">🏢</div>
       <div style="font-size:15px;font-weight:700;color:#01041D;margin-bottom:8px">What We Do</div>
       <p class="firm-para" style="font-size:12px">We deploy preferred equity and cash flow assignment capital into small-balance commercial real estate — the sub-$10M segment where institutional collateral meets structural competition gaps.</p>
     </div>
     <div style="background:white;border:1px solid var(--border);border-radius:12px;padding:24px;border-top:3px solid #57C5C6">
-      <div style="font-size:28px;margin-bottom:12px">⚡</div>
       <div style="font-size:15px;font-weight:700;color:#01041D;margin-bottom:8px">Why We Win</div>
       <p class="firm-para" style="font-size:12px">We built the technology and process infrastructure to operate where institutions cannot. Our underwriting gets to a decision in days — not months. Speed plus track record gives us a durable origination advantage.</p>
     </div>
     <div style="background:white;border:1px solid var(--border);border-radius:12px;padding:24px;border-top:3px solid #1A9E6E">
-      <div style="font-size:28px;margin-bottom:12px">🎯</div>
       <div style="font-size:15px;font-weight:700;color:#01041D;margin-bottom:8px">Who We Serve</div>
       <p class="firm-para" style="font-size:12px">Experienced real estate investors who own low-leverage, cash-flowing properties and need liquidity without selling. Large institutions have determined the check sizes aren't worth the complexity — we disagree.</p>
     </div>
+  </div>
+
+  <!-- ═══ CUMULATIVE FUNDING CHART ═══ -->
+  <div style="background:white;border:1px solid var(--border-accent);border-radius:12px;padding:28px;margin-bottom:40px;box-shadow:0 2px 12px rgba(1,4,29,0.06)">
+    <div style="font-size:13px;font-weight:700;color:#01041D;margin-bottom:4px">Cumulative Capital Deployed — Since Inception</div>
+    <div style="font-size:11px;color:#5A6A8A;margin-bottom:22px">Total advances funded by month, 2022–2026</div>
+    <canvas id="chartCumFunding" height="110"></canvas>
   </div>
 
 
@@ -760,7 +764,7 @@ tbody tr { cursor: pointer; }
       <div>
         <h3 style="font-size:24px;font-weight:700;color:#01041D;margin:0 0 4px">Derrick Barker</h3>
         <div style="font-size:11px;font-weight:600;color:#971BFF;letter-spacing:.08em;text-transform:uppercase;margin-bottom:20px">Co-Founder &amp; CEO</div>
-        <p style="font-size:15px;line-height:1.8;color:#3A4B6A;margin:0 0 16px">I started buying real estate from my dorm room at Harvard. After three years at Goldman Sachs trading complex securities, I'd built a 500-unit portfolio. I left to move back to Atlanta and increase the supply of affordable housing — ultimately growing to $450MM in total transaction volume.</p>
+        <p style="font-size:15px;line-height:1.8;color:#3A4B6A;margin:0 0 16px">Hello, my name is Derrick Barker. I started buying real estate from my dorm room at Harvard. After three years at Goldman Sachs trading complex securities, I'd built a 500-unit portfolio. I left to move back to Atlanta and increase the supply of affordable housing — ultimately growing to $450MM in total transaction volume.</p>
         <p style="font-size:15px;line-height:1.8;color:#3A4B6A;margin:0 0 16px">Here's what I learned, often painfully: as a real estate investor, your net worth is trapped in your assets. There aren't great options to access liquidity, particularly for sub institutional investors.</p>
         <p style="font-size:15px;line-height:1.8;color:#3A4B6A;margin:0 0 24px">In 2021, my partner and I launched Nectar to solve this problem — providing small balance preferred equity to <strong style="color:#01041D">experienced operators</strong> who own <strong style="color:#01041D">low leverage, cash flowing properties</strong>.</p>
         <div style="font-family:'Brush Script MT','Segoe Script',cursive;font-size:28px;color:#01041D;letter-spacing:.02em">Derrick Barker</div>
@@ -786,7 +790,7 @@ tbody tr { cursor: pointer; }
       <div>
         <h3 style="font-size:24px;font-weight:700;color:#01041D;margin:0 0 4px">Brittany Mosely</h3>
         <div style="font-size:11px;font-weight:600;color:#971BFF;letter-spacing:.08em;text-transform:uppercase;margin-bottom:20px">Co-Founder &amp; COO</div>
-        <p style="font-size:15px;line-height:1.8;color:#3A4B6A;margin:0 0 16px">A Harvard economics graduate, Brittany ran the $120M women's tops division at Abercrombie &amp; Fitch before applying that operational rigor to real estate — building a 120-unit short and medium-term rental portfolio.</p>
+        <p style="font-size:15px;line-height:1.8;color:#3A4B6A;margin:0 0 16px">Brittany brings a rare combination of institutional discipline and operator instincts to Nectar. A Harvard economics graduate, she ran the $120M women's tops division at Abercrombie &amp; Fitch before applying that operational rigor to real estate — building a 120-unit short and medium-term rental portfolio.</p>
         <p style="font-size:15px;line-height:1.8;color:#3A4B6A;margin:0">As COO, she oversees underwriting, operations, and investor relations. The combination of Derrick's investment track record and Brittany's operational excellence is what makes Nectar's model work — institutional quality at a speed and scale that larger players cannot match.</p>
       </div>
     </div>
@@ -1058,7 +1062,7 @@ tbody tr { cursor: pointer; }
 <div id="sec-market" class="dr-sec">
   <div class="opp-eyebrow">The Opportunity — Market Dynamics</div>
   <h2 class="opp-hl">The Case for Small Balance Preferred Equity — Now</h2>
-  <p class="opp-sub">A supply correction, a rate cycle turning, and a structural gap that large institutions cannot fill.</p>
+  <p class="opp-sub">A supply correction, a credit market reset, and a structural gap that large institutions cannot fill.</p>
 
   <!-- ── PART 1: Condition Cards + Bar Chart ── -->
   <div style="margin-bottom:48px">
@@ -1080,7 +1084,7 @@ tbody tr { cursor: pointer; }
           </div>
           <div style="display:flex;gap:12px;align-items:start">
             <div style="width:3px;height:40px;background:#C0392B;border-radius:2px;flex-shrink:0;margin-top:2px"></div>
-            <div><div style="font-size:14px;font-weight:700;color:#01041D;margin-bottom:2px">Rate Shock</div><div style="font-size:12px;color:#5A6A8A;line-height:1.5">Most aggressive hike cycle in 40 years — primary valuation headwind</div></div>
+            <div><div style="font-size:14px;font-weight:700;color:#01041D;margin-bottom:2px">Valuation Reset</div><div style="font-size:12px;color:#5A6A8A;line-height:1.5">Sharpest price correction in over a decade — asset values compressed across CRE</div></div>
           </div>
           <div style="display:flex;gap:12px;align-items:start">
             <div style="width:3px;height:40px;background:#C0392B;border-radius:2px;flex-shrink:0;margin-top:2px"></div>
@@ -1103,7 +1107,7 @@ tbody tr { cursor: pointer; }
           </div>
           <div style="display:flex;gap:12px;align-items:start">
             <div style="width:3px;height:40px;background:#1A9E6E;border-radius:2px;flex-shrink:0;margin-top:2px"></div>
-            <div><div style="font-size:14px;font-weight:700;color:#01041D;margin-bottom:2px">Rate Cycle Turning</div><div style="font-size:12px;color:#5A6A8A;line-height:1.5">Cut cycle underway — valuation headwind reversing, borrowing costs normalizing</div></div>
+            <div><div style="font-size:14px;font-weight:700;color:#01041D;margin-bottom:2px">Valuations Recovering</div><div style="font-size:12px;color:#5A6A8A;line-height:1.5">Price correction complete — asset values stabilizing and beginning to recover</div></div>
           </div>
           <div style="display:flex;gap:12px;align-items:start">
             <div style="width:3px;height:40px;background:#1A9E6E;border-radius:2px;flex-shrink:0;margin-top:2px"></div>
@@ -1135,37 +1139,44 @@ tbody tr { cursor: pointer; }
       <canvas id="mktSupplyChart" height="110"></canvas>
     </div>
 
-    <!-- Timeline — Enhanced and prominent -->
-    <div style="background:white;border:2px solid var(--border-accent);border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(1,4,29,0.08)">
-      <div style="background:linear-gradient(90deg,rgba(192,57,43,0.06),rgba(151,27,255,0.08),rgba(151,27,255,0.04),rgba(26,158,110,0.06));padding:8px 24px 0">
-        <div style="font-size:11px;font-weight:700;color:#01041D;letter-spacing:.04em;padding-top:12px;margin-bottom:4px">WHERE WE ARE IN THE CYCLE</div>
-        <div style="font-size:11px;color:#5A6A8A;margin-bottom:12px">The window between supply absorption and the next construction wave is the optimal entry point for preferred equity.</div>
+    <!-- Timeline — Hero element -->
+    <div style="background:white;border:2px solid var(--border-accent);border-radius:20px;overflow:hidden;box-shadow:0 8px 40px rgba(1,4,29,0.10);margin-bottom:12px">
+      <!-- Header bar -->
+      <div style="background:linear-gradient(90deg,rgba(192,57,43,0.06),rgba(151,27,255,0.10),rgba(151,27,255,0.05),rgba(26,158,110,0.06));padding:24px 32px 20px">
+        <div style="font-size:16px;font-weight:800;color:#01041D;letter-spacing:.02em;margin-bottom:6px">WHERE WE ARE IN THE CYCLE</div>
+        <div style="font-size:13px;color:#5A6A8A;line-height:1.5;max-width:720px">The window between supply absorption and the next construction wave is the optimal deployment environment for preferred equity. We are in the second phase.</div>
       </div>
+      <!-- Progress bar -->
+      <div style="padding:0 32px 6px">
+        <div style="display:flex;gap:4px">
+          <div style="flex:1;height:8px;background:#C0392B;border-radius:4px;opacity:0.35"></div>
+          <div style="flex:1;height:8px;background:linear-gradient(90deg,#971BFF,#7B5EA7);border-radius:4px;box-shadow:0 0 12px rgba(151,27,255,0.4)"></div>
+          <div style="flex:1;height:8px;background:#D0D5E0;border-radius:4px"></div>
+          <div style="flex:1;height:8px;background:#D0D5E0;border-radius:4px"></div>
+        </div>
+      </div>
+      <!-- Four phases -->
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0">
-        <div style="padding:24px 20px;border-right:1px solid var(--border-accent);border-top:1px solid var(--border-accent)">
-          <div style="font-size:32px;margin-bottom:10px">📈</div>
-          <div style="font-size:14px;font-weight:700;color:#C0392B;margin-bottom:6px">Peak Supply</div>
-          <div style="font-size:12px;color:#5A6A8A;line-height:1.6">Record deliveries hit simultaneously. Vacancy rises. Rent growth stalls. Asset prices under pressure.</div>
-          <div style="margin-top:10px;font-size:10px;font-weight:700;color:#C0392B;letter-spacing:.06em">2022 – 2023</div>
+        <div style="padding:28px 24px 32px;border-right:1px solid var(--border-accent);opacity:0.7">
+          <div style="display:inline-block;background:rgba(192,57,43,0.1);color:#C0392B;font-size:10px;font-weight:700;padding:3px 10px;border-radius:4px;letter-spacing:.06em;margin-bottom:14px">PHASE 1</div>
+          <div style="font-size:17px;font-weight:700;color:#C0392B;margin-bottom:8px">Peak Supply</div>
+          <div style="font-size:12px;color:#5A6A8A;line-height:1.7">Record deliveries hit simultaneously. Vacancy rises. Rent growth stalls. Asset prices compress.</div>
         </div>
-        <div style="padding:24px 20px;border-right:1px solid var(--border-accent);border-top:3px solid #971BFF;background:linear-gradient(180deg,rgba(151,27,255,0.08),transparent);position:relative">
-          <div style="position:absolute;top:12px;right:12px;background:#971BFF;color:white;font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;letter-spacing:.06em">WE ARE HERE</div>
-          <div style="font-size:32px;margin-bottom:10px">⟳</div>
-          <div style="font-size:14px;font-weight:700;color:#971BFF;margin-bottom:6px">Absorption Phase</div>
-          <div style="font-size:12px;color:#5A6A8A;line-height:1.6">Excess supply being absorbed. New starts collapsed –74%. Stock tightening. Rent growth stabilizing.</div>
-          <div style="margin-top:10px;font-size:10px;font-weight:700;color:#971BFF;letter-spacing:.06em">2024 – 2025 ← NOW</div>
+        <div style="padding:28px 24px 32px;border-right:1px solid var(--border-accent);background:linear-gradient(180deg,rgba(151,27,255,0.08),rgba(151,27,255,0.02));border-top:4px solid #971BFF">
+          <div style="display:inline-block;background:rgba(151,27,255,0.12);color:#971BFF;font-size:10px;font-weight:700;padding:3px 10px;border-radius:4px;letter-spacing:.06em;margin-bottom:14px">PHASE 2</div>
+          <div style="font-size:17px;font-weight:700;color:#971BFF;margin-bottom:8px">Absorption</div>
+          <div style="font-size:12px;color:#5A6A8A;line-height:1.7">Excess supply being digested. New starts collapsed –74%. Stock tightening. Rent growth stabilizing.</div>
+          <div style="margin-top:16px"><span style="background:#971BFF;color:white;font-size:11px;font-weight:700;padding:5px 14px;border-radius:20px;letter-spacing:.05em;box-shadow:0 4px 12px rgba(151,27,255,0.3)">WE ARE HERE</span></div>
         </div>
-        <div style="padding:24px 20px;border-right:1px solid var(--border-accent);border-top:1px solid var(--border-accent)">
-          <div style="font-size:32px;margin-bottom:10px">🕳</div>
-          <div style="font-size:14px;font-weight:700;color:#01041D;margin-bottom:6px">Supply Gap</div>
-          <div style="font-size:12px;color:#5A6A8A;line-height:1.6">No comparable pipeline behind it. Structural undersupply forms. Vacancy compresses. Pricing power returns.</div>
-          <div style="margin-top:10px;font-size:10px;font-weight:700;color:#5A6A8A;letter-spacing:.06em">2026 – 2028</div>
+        <div style="padding:28px 24px 32px;border-right:1px solid var(--border-accent)">
+          <div style="display:inline-block;background:rgba(1,4,29,0.06);color:#5A6A8A;font-size:10px;font-weight:700;padding:3px 10px;border-radius:4px;letter-spacing:.06em;margin-bottom:14px">PHASE 3</div>
+          <div style="font-size:17px;font-weight:700;color:#01041D;margin-bottom:8px">Supply Gap</div>
+          <div style="font-size:12px;color:#5A6A8A;line-height:1.7">No comparable pipeline behind it. Structural undersupply forms. Vacancy compresses. Pricing power returns to operators.</div>
         </div>
-        <div style="padding:24px 20px;border-top:1px solid var(--border-accent)">
-          <div style="font-size:32px;margin-bottom:10px">🔼</div>
-          <div style="font-size:14px;font-weight:700;color:#1A9E6E;margin-bottom:6px">Rent Appreciation</div>
-          <div style="font-size:12px;color:#5A6A8A;line-height:1.6">Tight supply + demand growth → sustained rent appreciation and asset value recovery across CRE.</div>
-          <div style="margin-top:10px;font-size:10px;font-weight:700;color:#1A9E6E;letter-spacing:.06em">2028+</div>
+        <div style="padding:28px 24px 32px">
+          <div style="display:inline-block;background:rgba(26,158,110,0.1);color:#1A9E6E;font-size:10px;font-weight:700;padding:3px 10px;border-radius:4px;letter-spacing:.06em;margin-bottom:14px">PHASE 4</div>
+          <div style="font-size:17px;font-weight:700;color:#1A9E6E;margin-bottom:8px">Rent Appreciation</div>
+          <div style="font-size:12px;color:#5A6A8A;line-height:1.7">Tight supply + demand growth → sustained rent appreciation and asset value recovery across CRE.</div>
         </div>
       </div>
     </div>
@@ -1199,7 +1210,7 @@ tbody tr { cursor: pointer; }
 
     <!-- Long-term CRE Asset Price Chart -->
     <div style="background:white;border:1px solid var(--border-accent);border-radius:12px;padding:24px;margin-bottom:20px;box-shadow:0 2px 12px rgba(1,4,29,0.06)">
-      <div style="font-size:13px;font-weight:700;color:#01041D;margin-bottom:4px">U.S. Commercial Real Estate Values — 50-Year Perspective</div>
+      <div style="font-size:13px;font-weight:700;color:#01041D;margin-bottom:4px">U.S. Commercial Real Estate Values — Historical Index, 1978–Present</div>
       <div style="font-size:11px;color:#5A6A8A;margin-bottom:20px">Indexed to 100 at 1978. Every major correction was followed by a sustained recovery. We are deploying capital at the arrow.</div>
       <canvas id="mktLongTermCRE" height="120"></canvas>
       <div style="font-size:10px;color:#5A6A8A;margin-top:12px;text-align:right">Sources: NCREIF NPI Index · MIT/CRE Transaction-Based Index · Green Street CPPI</div>
@@ -1207,7 +1218,7 @@ tbody tr { cursor: pointer; }
 
     <!-- Long-term Supply Chart -->
     <div style="background:white;border:1px solid var(--border-accent);border-radius:12px;padding:24px;box-shadow:0 2px 12px rgba(1,4,29,0.06)">
-      <div style="font-size:13px;font-weight:700;color:#01041D;margin-bottom:4px">U.S. Multifamily Construction Starts — 50-Year Perspective</div>
+      <div style="font-size:13px;font-weight:700;color:#01041D;margin-bottom:4px">U.S. Multifamily Construction Starts — Historical Trend, 1978–Present</div>
       <div style="font-size:11px;color:#5A6A8A;margin-bottom:20px">New starts have collapsed to levels not seen since the early 1990s. The last time this happened, a decade of rent growth followed.</div>
       <canvas id="mktLongTermSupply" height="120"></canvas>
       <div style="font-size:10px;color:#5A6A8A;margin-top:12px;text-align:right">Sources: U.S. Census Bureau · CBRE Research / CBRE Econometric Advisors</div>
@@ -2903,6 +2914,92 @@ function setView(v, btn) {
 // ── INIT ──────────────────────────────────────────────────────────────
 applyFilters();
 
+// ── CUMULATIVE FUNDING CHART ──
+(function renderCumFunding() {
+  const canvas = document.getElementById('chartCumFunding');
+  if (!canvas) return;
+
+  // Build monthly cumulative from RAW data
+  const monthly = {};
+  RAW.forEach(d => {
+    const key = d.fundDate;
+    monthly[key] = (monthly[key] || 0) + d.advance;
+  });
+
+  // Generate all months from 2021-06 to 2026-02
+  const allMonths = [];
+  let dt = new Date(2022, 0, 1); // Jan 2022
+  const end = new Date(2026, 1, 1); // Feb 2026
+  while (dt <= end) {
+    const key = dt.getFullYear() + '-' + String(dt.getMonth() + 1).padStart(2, '0');
+    allMonths.push(key);
+    dt = new Date(dt.getFullYear(), dt.getMonth() + 1, 1);
+  }
+
+  let cumulative = 0;
+  const labels = [];
+  const data = [];
+  for (const mo of allMonths) {
+    cumulative += (monthly[mo] || 0);
+    labels.push(mo);
+    data.push(cumulative);
+  }
+
+  new Chart(canvas, {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Cumulative Capital Deployed',
+        data: data,
+        borderColor: '#971BFF',
+        backgroundColor: 'rgba(151,27,255,0.08)',
+        fill: true,
+        tension: 0.3,
+        pointRadius: 0,
+        pointHoverRadius: 4,
+        borderWidth: 2.5,
+      }]
+    },
+    options: {
+      responsive: true,
+      animation: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: ctx => ' $' + (ctx.raw / 1e6).toFixed(1) + 'M deployed'
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: 'rgba(1,4,29,0.06)' },
+          ticks: {
+            color: '#5A6A8A',
+            font: { size: 10 },
+            maxRotation: 45,
+            maxTicksLimit: 12,
+            callback: function(val, i) {
+              const label = this.getLabelForValue(val);
+              if (label.endsWith('-01') || label.endsWith('-07')) return label;
+              return '';
+            }
+          }
+        },
+        y: {
+          grid: { color: 'rgba(1,4,29,0.07)' },
+          ticks: {
+            color: '#5A6A8A',
+            font: { size: 10 },
+            callback: v => '$' + (v / 1e6).toFixed(0) + 'M'
+          }
+        }
+      }
+    }
+  });
+})();
+
 // ═══════ DATA ROOM NAVIGATION ═══════
 const SEC_PARENT = {
   firm:'nb-wwa', track:'nb-wwa', cases:'nb-wwa',
@@ -3444,7 +3541,7 @@ function renderMarketCharts() {
   new Chart(document.getElementById('mktBarChart'), {
     type: 'bar',
     data: {
-      labels: ['Asset Prices (NCREIF)', 'New Supply Starts', 'Financing Avail.', 'Pref Eq Spread'],
+      labels: ['Asset Prices (NCREIF)', 'New Supply Starts', 'Vacancy Rate', 'Rent Growth'],
       datasets: [
         {
           label: 'At Peak (2021–2022)',
@@ -3454,7 +3551,7 @@ function renderMarketCharts() {
         },
         {
           label: 'Today (2025–2026)',
-          data: [86, 26, 72, 115],
+          data: [86, 26, 78, 135],
           backgroundColor: 'rgba(151,27,255,0.75)',
           borderRadius: 4,
         }
