@@ -658,6 +658,22 @@ header{position:relative;top:auto;z-index:100;}
 .op-pmt th { background: #f0f0f7; padding: 4px 8px; text-align: left; font-size: 9px; color: #666; text-transform: uppercase; }
 .op-pmt td { padding: 4px 8px; border-bottom: 1px solid #f7f7f7; }
 .op-pmt tr:last-child td { border: none; }
+.op-docsend-btn {
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding: 10px 14px;
+  margin-top: 12px;
+  background: #971BFF;
+  color: #ffffff;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  transition: background 0.15s ease;
+}
+.op-docsend-btn:hover { background: #7a14cc; }
 .paid { background: #e8faf0; color: #27ae60; padding: 1px 5px; border-radius: 3px; font-size: 8px; font-weight: 700; }
 .unpaid { background: #fff8e6; color: #e67e22; padding: 1px 5px; border-radius: 3px; font-size: 8px; font-weight: 700; }
 .op-foot { background: #01041D; padding: 9px 16px; text-align: center; font-size: 9px; color: #8A9BB8; }
@@ -2789,6 +2805,8 @@ function openOP(deal) {
 
   const memo = MEMO[deal.id] || null;
   const m = memo || {};
+  const tapeRow = PMT_DATA.tape.find(x => String(x.id) === String(deal.id)) || {};
+  const docsendUrl = tapeRow.docsend_url || '';
   const city = m.city || deal.city || '—';
   const desc = m.desc || `${deal.name} is a ${deal.asset.toLowerCase()} investment structured as ${deal.type}, funded ${deal.fundDate} with a ${deal.term}-month term.`;
   const collPct = Math.min((deal.collected / deal.advance * 100), 100).toFixed(0);
@@ -2911,6 +2929,7 @@ function openOP(deal) {
         <div class="op-st">Investment Details</div>
         <div class="op-card">
           ${details.map(d => `<div class="op-row"><span>${d.l}</span><span>${d.v}</span></div>`).join('')}
+          ${docsendUrl ? `<a href="${docsendUrl}" target="_blank" rel="noopener noreferrer" class="op-docsend-btn">📄 View Supporting Documents</a>` : ''}
         </div>
       </div>
 
