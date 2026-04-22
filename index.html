@@ -2826,22 +2826,22 @@ function openOP(deal) {
     {l:'Servicer', v:'Nectar'},
   ];
 
-  // Payment history (last 6 months up to today)
-  const [yr, mo] = deal.fundDate.split('-').map(Number);
-  const now = new Date(2026, 2); // March 2026
-  const pmts = [];
-  let running = 0;
-  for (let i = 0; i < Math.min(deal.term, 48); i++) {
-    const dt = new Date(yr, mo - 1 + i);
-    if (dt > now) break;
-    running += deal.monthlyPmt;
-    pmts.push({
-      month: dt.toLocaleDateString('en-US', {month:'short', year:'2-digit'}),
-      amount: deal.monthlyPmt,
-      paid: running <= deal.collected + deal.monthlyPmt * 0.5
-    });
-  }
-  const last6 = pmts.slice(-6).reverse();
+  // Payment history (last 6 months, sourced from PMT_DATA.dpd)
+  const dpdArr = PMT_DATA.dpd[deal.id] || [];
+  const now = new Date();
+  const curMonthStr = `${now.getUTCFullYear()}-${String(now.getUTCMonth() + 1).padStart(2, '0')}`;
+  const curEom = endOfPaymentMonth(curMonthStr);
+  const visible = dpdArr
+    .filter(r => {
+      const eom = endOfPaymentMonth(r.month_str);
+      return eom && curEom && eom <= curEom;
+    })
+    .sort((a, b) => (a.pmt_num || 0) - (b.pmt_num || 0));
+  const last6 = visible.slice(-6).reverse().map(r => ({
+    month:  formatPaymentMonth(r.month_str),
+    amount: r.is_resolved ? Number(r.actual_amt || 0) : Number(r.sched_amt || 0),
+    paid:   !!r.is_resolved,
+  }));
   const hasMemo = !!memo;
 
   panel.innerHTML = `
