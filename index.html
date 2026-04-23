@@ -1474,7 +1474,7 @@ tbody tr { cursor: pointer; }
     <div class="logo">nectar <span>Investor Data Room</span></div>
   </div>
   <div class="header-right">
-    As of March 2026 &nbsp;|&nbsp; Confidential — For Qualified Investors Only<br>
+    As of April 2026 &nbsp;|&nbsp; Confidential — For Qualified Investors Only<br>
     RE Nectar Inc. &nbsp;|&nbsp; <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3c48595d517c494f5952595f485d4e125f5351">[email&#160;protected]</a>
   </div>
 </header>
@@ -1791,7 +1791,7 @@ tbody tr { cursor: pointer; }
 <footer>
   <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
     <div style="display:flex;align-items:center;gap:12px"><span style="font-family:'Manrope',sans-serif;font-size:16px;font-weight:700;color:#971BFF;opacity:0.5">nectar</span></div>
-    <div style="font-size:11px;color:var(--dim);letter-spacing:.02em">Confidential — For Accredited Investors Only &nbsp;·&nbsp; Data as of March 2026</div>
+    <div style="font-size:11px;color:var(--dim);letter-spacing:.02em">Confidential — For Accredited Investors Only &nbsp;·&nbsp; Data as of April 2026</div>
   </div> Past performance is not indicative of future results.
 </footer>
 
@@ -1904,8 +1904,8 @@ function computeDPD(row, obsDate) {
 }
 
 // Portfolio observation date (UTC), matching the data cutoff baked into the tape.
-const OBS_DATE = new Date(Date.UTC(2026, 2, 26));
-const OBS_MONTH_STR = "2026-03";
+const OBS_DATE = new Date(Date.UTC(2026, 3, 22));
+const OBS_MONTH_STR = "2026-04";
 
 // ── RAW DATA ────────────────────────────────────────────────────────────────
 const RAW = [
@@ -2984,7 +2984,7 @@ function renderCashFlow() {
   });
 
   // Projected next 24 months for open deals
-  const now = new Date(2026, 2); // March 2026
+  const now = new Date(2026, 3); // April 2026
   const monthlyProj = {};
   filtered.filter(d=>d.status==='Open').forEach(d => {
     const mths = Math.round(d.outstanding / (d.monthlyPmt||1));
@@ -3120,10 +3120,10 @@ function initApp() {
       monthly[key] = (monthly[key] || 0) + d.advance;
     });
 
-    // Generate all months from 2021-06 to 2026-02
+    // Generate all months from 2022-01 to 2026-03 (through last complete month)
     const allMonths = [];
     let dt = new Date(2022, 0, 1); // Jan 2022
-    const end = new Date(2026, 1, 1); // Feb 2026
+    const end = new Date(2026, 2, 1); // Mar 2026
     while (dt <= end) {
       const key = dt.getFullYear() + '-' + String(dt.getMonth() + 1).padStart(2, '0');
       allMonths.push(key);
@@ -3351,10 +3351,10 @@ function pitDpd(rec, obsYear, obsMonth) {
 }
 
 function computeChart2(deals, delinFilter) {
-  // Build all months from Oct 2021 to Mar 2026
+  // Build all months from Oct 2021 through Mar 2026 (last complete month)
   const months = [];
   let d = new Date(2021, 9, 1); // Oct 2021
-  const end = new Date(2026, 1, 28); // Exclude current incomplete month
+  const end = new Date(2026, 2, 28); // Exclude current incomplete month (April)
   while (d <= end) {
     months.push([d.getFullYear(), d.getMonth() + 1]);
     d = new Date(d.getFullYear(), d.getMonth() + 1, 1);
