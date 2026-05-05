@@ -1836,7 +1836,8 @@ tbody tr { cursor: pointer; }
       <button class="pill active" onclick="setView('summary',this)">Summary</button>
       <button class="pill" onclick="setView('deals',this)">Deal Detail</button>
       <button class="pill" onclick="setView('payments',this)">Payment Analysis</button>
-      <button class="pill" onclick="setView('workouts',this)">Workout Scenarios</button>
+      <!-- HIDDEN: workout scenarios sub-tab — re-enable to bring back -->
+      <!-- <button class="pill" onclick="setView('workouts',this)">Workout Scenarios</button> -->
     </div>
   </div>
 
@@ -2107,7 +2108,8 @@ tbody tr { cursor: pointer; }
     </div>
   </div>
 
-  <!-- WORKOUT SCENARIOS VIEW -->
+  <!-- HIDDEN: workout scenarios view — re-enable to bring back -->
+  <!--
   <div id="viewWorkouts" style="display:none">
     <div class="wo-header">
       <div class="wo-title">Workout Scenarios</div>
@@ -2116,6 +2118,7 @@ tbody tr { cursor: pointer; }
     <div class="wo-legend" id="workoutsLegend"></div>
     <div class="wo-list" id="workoutsList"></div>
   </div>
+  -->
 
 </div><!-- /main -->
 
@@ -3219,7 +3222,8 @@ function openOP(deal) {
     </div>
 
     <div class="op-body">
-      ${workout ? `<a class="op-workout-btn" onclick="gotoWorkout('${woEscape(workout.slug)}')">View Workout Scenario: ${woEscape(workout.title)} →</a>` : ''}
+      ${/* HIDDEN: workout scenario button — re-enable to bring back */ ''}
+      ${'' /* workout ? `<a class="op-workout-btn" onclick="gotoWorkout('${woEscape(workout.slug)}')">View Workout Scenario: ${woEscape(workout.title)} →</a>` : '' */}
 
       <div class="op-sec">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:6px">
@@ -3482,6 +3486,8 @@ function gotoWorkout(slug) {
   }, 80);
 }
 
+// HIDDEN: workout scenarios render block — re-enable to bring back
+/*
 function renderWorkouts() {
   const list = document.getElementById('workoutsList');
   const legend = document.getElementById('workoutsLegend');
@@ -3632,6 +3638,8 @@ function renderWorkoutCard(w) {
     </div>
   `;
 }
+*/
+// END HIDDEN: workout scenarios render block
 
 // ── INIT ──────────────────────────────────────────────────────────────
 // All startup code that depends on PMT_DATA is wrapped in initApp().
