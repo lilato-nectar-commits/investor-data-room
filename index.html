@@ -5,6 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nectar Capital — Investor Data Room</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script type="module">
+  import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+  window.supabase = createClient(
+    "https://wxfqhrfagwyusxmwlcfz.supabase.co",
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind4ZnFocmZhZ3d5dXN4bXdsY2Z6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYyNjI1MTgsImV4cCI6MjA5MTgzODUxOH0.XoMe-zpJIbVVzFN9ts8Sb0faEW1ZBwbXQgIuhPUNSx8"
+  );
+</script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600&display=swap');
 
@@ -1093,6 +1100,115 @@ tbody tr { cursor: pointer; }
   to { transform: rotate(360deg); }
 }
 
+/* ── Auth overlays (login + unauthorized) ── */
+#login-overlay, #unauthorized-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--page-bg);
+  z-index: 9998;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  color: var(--text);
+}
+#login-overlay.hidden, #unauthorized-overlay.hidden { display: none; }
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 36px 32px;
+  box-shadow: 0 8px 30px rgba(1,4,29,0.06);
+  text-align: center;
+}
+.auth-card h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--text);
+  margin: 0 0 8px;
+  letter-spacing: -0.01em;
+}
+.auth-card .sub {
+  font-size: 13px;
+  color: var(--dim);
+  line-height: 1.55;
+  margin: 0 0 24px;
+}
+.auth-card form { display: flex; flex-direction: column; gap: 10px; }
+.auth-card input[type="email"] {
+  width: 100%;
+  padding: 12px 14px;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  color: var(--text);
+  box-sizing: border-box;
+}
+.auth-card input[type="email"]:focus { outline: none; border-color: var(--accent); }
+.auth-card button {
+  padding: 12px 18px;
+  background: var(--accent);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  letter-spacing: 0.02em;
+  transition: background 0.15s ease;
+}
+.auth-card button:hover { background: var(--accent-dim); }
+.auth-card button:disabled { opacity: 0.55; cursor: not-allowed; }
+.auth-card .err {
+  font-size: 12px;
+  color: var(--red);
+  margin-top: 4px;
+  min-height: 16px;
+  line-height: 1.4;
+}
+.auth-card .ok {
+  font-size: 13px;
+  color: var(--text);
+  background: rgba(151,27,255,0.06);
+  border: 1px solid var(--border-accent);
+  border-radius: 8px;
+  padding: 16px;
+  line-height: 1.55;
+}
+.auth-card .ok strong { color: var(--accent); }
+
+/* Signed-in indicator */
+#signed-in-indicator {
+  position: fixed;
+  top: 14px;
+  right: 18px;
+  z-index: 200;
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-size: 11px;
+  color: rgba(255,255,255,0.7);
+  letter-spacing: 0.02em;
+  background: rgba(1,4,29,0.45);
+  padding: 5px 10px;
+  border-radius: 6px;
+  backdrop-filter: blur(4px);
+}
+#signed-in-indicator.hidden { display: none; }
+#signed-in-indicator a {
+  color: rgba(255,255,255,0.9);
+  text-decoration: none;
+  margin-left: 8px;
+  border-bottom: 1px dotted rgba(255,255,255,0.4);
+}
+#signed-in-indicator a:hover { color: #ffffff; border-bottom-color: rgba(255,255,255,0.85); }
+
 </style>
 </head>
 <body>
@@ -1100,6 +1216,30 @@ tbody tr { cursor: pointer; }
 <div id="pmt-loading-overlay">
   <div class="spinner"></div>
   <div class="label">Loading portfolio data…</div>
+</div>
+
+<div id="login-overlay" class="hidden">
+  <div class="auth-card">
+    <h1>Nectar Investor Data Room</h1>
+    <p class="sub">Enter your email to receive a sign-in link</p>
+    <form id="login-form">
+      <input id="login-email" type="email" placeholder="you@example.com" required autocomplete="email">
+      <button type="submit" id="login-submit">Send sign-in link</button>
+      <div class="err" id="login-error"></div>
+    </form>
+  </div>
+</div>
+
+<div id="unauthorized-overlay" class="hidden">
+  <div class="auth-card">
+    <h1>Access Pending</h1>
+    <p class="sub" id="unauthorized-sub">Your account is not authorized to view this data room. Please contact Nectar to request access.</p>
+    <button type="button" id="unauthorized-signout">Sign out</button>
+  </div>
+</div>
+
+<div id="signed-in-indicator" class="hidden">
+  <span id="signed-in-email"></span><a href="#" id="sign-out-link">Sign out</a>
 </div>
 
 <nav id="topnav" style="background:#01041D;border-bottom:3px solid transparent;border-image:linear-gradient(90deg,#5DE7DC,#971BFF,#3302F7) 1;">
@@ -2148,19 +2288,14 @@ const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 let PMT_DATA = { tape: [], dpd: {}, sched: {} };
 
 async function loadPmtData() {
-  const resp = await fetch(`${SUPABASE_URL}/rest/v1/rpc/get_pmt_data`, {
-    method: "POST",
-    headers: {
-      apikey:         SUPABASE_ANON_KEY,
-      Authorization:  `Bearer ${SUPABASE_ANON_KEY}`,
-      "Content-Type": "application/json",
-    },
-    body: "{}",
-  });
-  if (!resp.ok) {
-    throw new Error(`Supabase returned ${resp.status}: ${await resp.text()}`);
+  if (!window.supabase) {
+    throw new Error("Supabase client not initialized");
   }
-  return await resp.json();
+  const { data, error } = await window.supabase.rpc("get_pmt_data");
+  if (error) {
+    throw new Error(`Supabase RPC error: ${error.message}`);
+  }
+  return data;
 }
 
 function hideOverlay() {
@@ -2180,7 +2315,129 @@ function showOverlayError(message) {
   overlay.classList.remove("hidden");
 }
 
+// ── Auth UI helpers ────────────────────────────────────────────────────────
+async function waitForSupabase(timeoutMs = 5000) {
+  const start = Date.now();
+  while (!window.supabase) {
+    if (Date.now() - start > timeoutMs) {
+      throw new Error("Authentication library failed to load. Check your network and reload.");
+    }
+    await new Promise(r => setTimeout(r, 50));
+  }
+}
+
+function showLoginOverlay() {
+  document.getElementById("login-overlay")?.classList.remove("hidden");
+  document.getElementById("pmt-loading-overlay")?.classList.add("hidden");
+  document.getElementById("unauthorized-overlay")?.classList.add("hidden");
+  document.getElementById("signed-in-indicator")?.classList.add("hidden");
+}
+
+function hideLoginOverlay() {
+  document.getElementById("login-overlay")?.classList.add("hidden");
+}
+
+function showUnauthorizedOverlay(email) {
+  const overlay = document.getElementById("unauthorized-overlay");
+  if (!overlay) return;
+  const sub = document.getElementById("unauthorized-sub");
+  if (sub && email) {
+    sub.textContent = `${email} is not authorized to view this data room. Please contact Nectar to request access.`;
+  }
+  overlay.classList.remove("hidden");
+  document.getElementById("pmt-loading-overlay")?.classList.add("hidden");
+  document.getElementById("login-overlay")?.classList.add("hidden");
+  document.getElementById("signed-in-indicator")?.classList.add("hidden");
+}
+
+function showSignedInIndicator(email) {
+  const ind = document.getElementById("signed-in-indicator");
+  if (!ind) return;
+  const span = document.getElementById("signed-in-email");
+  if (span) span.textContent = `Signed in as ${email}`;
+  ind.classList.remove("hidden");
+}
+
+async function handleLoginSubmit(e) {
+  e.preventDefault();
+  const emailInput = document.getElementById("login-email");
+  const submit = document.getElementById("login-submit");
+  const errEl = document.getElementById("login-error");
+  const email = (emailInput?.value || "").trim();
+  if (!email) return;
+  errEl.textContent = "";
+  submit.disabled = true;
+  submit.textContent = "Sending…";
+  try {
+    const { error } = await window.supabase.auth.signInWithOtp({
+      email,
+      options: { emailRedirectTo: window.location.origin + window.location.pathname },
+    });
+    if (error) throw error;
+    const card = document.querySelector("#login-overlay .auth-card");
+    if (card) {
+      card.innerHTML = `
+        <h1>Check your email</h1>
+        <div class="ok">We sent a sign-in link to <strong>${email}</strong>.<br>The link expires in 1 hour.</div>
+      `;
+    }
+  } catch (err) {
+    errEl.textContent = err.message || "Failed to send sign-in link. Please try again.";
+    submit.disabled = false;
+    submit.textContent = "Send sign-in link";
+  }
+}
+
+async function handleSignOut(e) {
+  if (e) e.preventDefault();
+  try {
+    await window.supabase.auth.signOut();
+  } catch (err) {
+    console.error("Sign out failed:", err);
+  }
+  // Clean URL (drop ?deal=) and reload to a fresh, signed-out state.
+  const url = new URL(window.location.href);
+  url.searchParams.delete("deal");
+  window.location.href = url.pathname + (url.search || "");
+}
+
+let _authWired = false;
+function wireAuthOnce() {
+  if (_authWired) return;
+  _authWired = true;
+  document.getElementById("login-form")?.addEventListener("submit", handleLoginSubmit);
+  document.getElementById("sign-out-link")?.addEventListener("click", handleSignOut);
+  document.getElementById("unauthorized-signout")?.addEventListener("click", handleSignOut);
+  // When a magic-link sign-in completes (possibly in another tab), swap from
+  // login screen to data room without requiring a manual reload.
+  window.supabase.auth.onAuthStateChange((event, session) => {
+    if (event === "SIGNED_IN" && session) {
+      const loginOverlay = document.getElementById("login-overlay");
+      if (loginOverlay && !loginOverlay.classList.contains("hidden")) {
+        bootstrap();
+      }
+    }
+  });
+}
+
 async function bootstrap() {
+  try {
+    await waitForSupabase();
+  } catch (err) {
+    showOverlayError(err.message);
+    return;
+  }
+  wireAuthOnce();
+
+  const { data: { session } } = await window.supabase.auth.getSession();
+  if (!session) {
+    showLoginOverlay();
+    return;
+  }
+
+  hideLoginOverlay();
+  document.getElementById("unauthorized-overlay")?.classList.add("hidden");
+
   const overlay = document.getElementById("pmt-loading-overlay");
   if (overlay) {
     overlay.classList.remove("hidden");
@@ -2191,12 +2448,17 @@ async function bootstrap() {
   }
   try {
     PMT_DATA = await loadPmtData();
+    if (!PMT_DATA || !Array.isArray(PMT_DATA.tape) || PMT_DATA.tape.length === 0) {
+      showUnauthorizedOverlay(session.user?.email);
+      return;
+    }
     if (typeof initApp === "function") {
       initApp();
     } else {
       console.error("initApp() is not defined — existing startup code was not wrapped correctly.");
     }
     if (typeof applyDeepLink === "function") applyDeepLink();
+    showSignedInIndicator(session.user?.email);
     hideOverlay();
   } catch (err) {
     console.error("Failed to load PMT_DATA:", err);
