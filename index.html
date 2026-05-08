@@ -1185,29 +1185,33 @@ tbody tr { cursor: pointer; }
 }
 .auth-card .ok strong { color: var(--accent); }
 
-/* Signed-in indicator */
+/* Signed-in indicator — sits above the sticky topnav (z-index 200) */
 #signed-in-indicator {
   position: fixed;
-  top: 14px;
+  top: 12px;
   right: 18px;
-  z-index: 200;
+  z-index: 9000;
   font-family: 'DM Sans', system-ui, sans-serif;
   font-size: 11px;
-  color: rgba(255,255,255,0.7);
+  color: rgba(255,255,255,0.88);
   letter-spacing: 0.02em;
-  background: rgba(1,4,29,0.45);
-  padding: 5px 10px;
-  border-radius: 6px;
-  backdrop-filter: blur(4px);
+  background: rgba(151,27,255,0.22);
+  border: 1px solid rgba(151,27,255,0.45);
+  padding: 6px 12px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 #signed-in-indicator.hidden { display: none; }
 #signed-in-indicator a {
-  color: rgba(255,255,255,0.9);
+  color: rgba(255,255,255,0.95);
   text-decoration: none;
   margin-left: 8px;
-  border-bottom: 1px dotted rgba(255,255,255,0.4);
+  padding-left: 8px;
+  border-left: 1px solid rgba(255,255,255,0.25);
 }
-#signed-in-indicator a:hover { color: #ffffff; border-bottom-color: rgba(255,255,255,0.85); }
+#signed-in-indicator a:hover { color: #ffffff; }
 
 </style>
 </head>
@@ -2437,6 +2441,9 @@ async function bootstrap() {
 
   hideLoginOverlay();
   document.getElementById("unauthorized-overlay")?.classList.add("hidden");
+  // Show the signed-in indicator as soon as we have a session, before the
+  // data fetch — that way it's visible even if loadPmtData / initApp throw.
+  showSignedInIndicator(session.user?.email);
 
   const overlay = document.getElementById("pmt-loading-overlay");
   if (overlay) {
@@ -2458,7 +2465,6 @@ async function bootstrap() {
       console.error("initApp() is not defined — existing startup code was not wrapped correctly.");
     }
     if (typeof applyDeepLink === "function") applyDeepLink();
-    showSignedInIndicator(session.user?.email);
     hideOverlay();
   } catch (err) {
     console.error("Failed to load PMT_DATA:", err);
