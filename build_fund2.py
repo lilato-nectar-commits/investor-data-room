@@ -1,0 +1,219 @@
+"""
+Refresh the Nectar Fund II data block inside index.html from a borrowing-base
+tape CSV.
+
+Finds the sentinel comments in index.html
+
+    /* @fund2-data-start */
+    const FUND2_DEALS = [...];
+    /* @fund2-data-end */
+
+and replaces the body between them with a regenerated JS literal. Aggregates
+multi-tranche entries (e.g. deal 1208 with two slices) into one Fund II
+position per LoanPro ID.
+
+Usage:
+    python3 build_fund2.py "<path/to/Borrowing_Base_Tape.csv>"
+
+If no path is given, the most recently modified Borrowing_Base_Tape*.csv in
+~/Downloads is used.
+"""
+import csv
+import json
+import re
+import sys
+from datetime import datetime
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent
+INDEX_HTML = ROOT / "index.html"
+SENTINEL_START = "/* @fund2-data-start */"
+SENTINEL_END = "/* @fund2-data-end */"
+
+
+def parse_money(s: str) -> float | None:
+    if not s:
+        return None
+    cleaned = re.sub(r"[\$,\s]", "", s)
+    if not cleaned:
+        return None
+    try:
+        return float(cleaned)
+    except ValueError:
+        return None
+
+
+def parse_pct(s: str) -> float | None:
+    if not s:
+        return None
+    cleaned = s.strip().rstrip("%").replace(",", "")
+    if not cleaned:
+        return None
+    try:
+        return float(cleaned)
+    except ValueError:
+        return None
+
+
+def parse_int(s: str) -> int | None:
+    if not s:
+        return None
+    try:
+        return int(float(s.replace(",", "")))
+    except ValueError:
+        return None
+
+
+def parse_date(s: str) -> str | None:
+    if not s:
+        return None
+    for fmt in ("%m-%d-%Y", "%m/%d/%Y", "%Y-%m-%d"):
+        try:
+            return datetime.strptime(s.strip(), fmt).date().isoformat()
+        except ValueError:
+            continue
+    return None
+
+
+def normalize_asset(s: str) -> str:
+    if not s:
+        return ""
+    s = s.strip()
+    aliases = {
+        "Hotels & Hospitality": ["hotel", "hospitality"],
+        "Multifamily": ["multifamily", "multi-family", "multi family"],
+        "SFR": ["sfr", "single family", "single-family"],
+        "Self-Storage": ["self-storage", "self storage"],
+        "Mixed Use": ["mixed use", "mixed-use"],
+        "Manufactured Housing": ["manufactured", "mh "],
+    }
+    low = s.lower()
+    for canonical, needles in aliases.items():
+        if any(n in low for n in needles):
+            return canonical
+    return s
+
+
+def find_default_csv() -> Path | None:
+    downloads = Path.home() / "Downloads"
+    if not downloads.exists():
+        return None
+    candidates = sorted(
+        downloads.glob("Borrowing_Base_Tape*.csv"),
+        key=lambda p: p.stat().st_mtime,
+        reverse=True,
+    )
+    return candidates[0] if candidates else None
+
+
+def convert_row(row: dict) -> dict:
+    return {
+        "id": (row.get("LoanPro ID") or "").strip(),
+        "name": (row.get("Business Name") or "").strip(),
+        "borrower_last": (row.get("Contact Last") or "").strip(),
+        "exposure_pct": parse_pct(row.get("Funding Source %", "")),
+        "fund_outstanding": parse_money(
+            row.get("F-Outstanding Principal Balance", "")
+        ),
+        "fund_monthly_pmt": parse_money(row.get("F - Full Monthly Payment", "")),
+        "ltv": parse_pct(row.get("LTV", "")),
+        "dscr": parse_money(row.get("LoanPro ID - Total DSCR (input)", "")),
+        "term_months": parse_int(row.get("LoanPro ID - Term (months)", "")),
+        "fund_date": parse_date(row.get("LP - Funding Date", "")),
+        "term_end": parse_date(row.get("Loan Pro ID - Term Ending", "")),
+        "status": (row.get("LoanPro ID - Payment Status") or "").strip(),
+        "city_state": (row.get("LoanPro ID - CIty / State") or "").strip(),
+        "asset": normalize_asset(row.get("LoanPro ID - Property Type2", "")),
+        "units": parse_int(row.get("LoanPro ID - # of Units Underwritten", "")),
+        "one_pager": (row.get("One Pager Link") or "").strip(),
+    }
+
+
+def aggregate_tranches(rows: list[dict]) -> list[dict]:
+    """Sum dollar/percent fields when a deal has multiple Fund II slices."""
+    grouped: dict[str, dict] = {}
+    for r in rows:
+        existing = grouped.get(r["id"])
+        if existing is None:
+            grouped[r["id"]] = r
+            continue
+        for field in ("exposure_pct", "fund_outstanding", "fund_monthly_pmt"):
+            a = existing.get(field)
+            b = r.get(field)
+            if a is None and b is None:
+                existing[field] = None
+            else:
+                existing[field] = (a or 0) + (b or 0)
+    return list(grouped.values())
+
+
+def render_block(deals: list[dict], source_name: str) -> str:
+    json_body = json.dumps(deals, indent=2)
+    # Pretty up a touch: indent the literal so it sits comfortably inside the
+    # existing <script> block.
+    indented = "\n".join("  " + ln if ln else ln for ln in json_body.split("\n"))
+    return (
+        f"{SENTINEL_START}\n"
+        f"// Generated by build_fund2.py from {source_name}\n"
+        f"// {len(deals)} positions. Do not hand-edit.\n"
+        f"const FUND2_DEALS =\n{indented};\n"
+        f"{SENTINEL_END}"
+    )
+
+
+def replace_block(html: str, new_block: str) -> str:
+    pattern = re.compile(
+        re.escape(SENTINEL_START) + r".*?" + re.escape(SENTINEL_END),
+        re.DOTALL,
+    )
+    if not pattern.search(html):
+        raise SystemExit(
+            "Sentinels not found in index.html. Expected:\n"
+            f"  {SENTINEL_START}\n  ... data ...\n  {SENTINEL_END}"
+        )
+    return pattern.sub(lambda _m: new_block, html, count=1)
+
+
+def main() -> int:
+    if len(sys.argv) > 1:
+        csv_path = Path(sys.argv[1]).expanduser()
+    else:
+        csv_path = find_default_csv()
+        if csv_path is None:
+            print(
+                "usage: python3 build_fund2.py <path/to/Borrowing_Base_Tape.csv>",
+                file=sys.stderr,
+            )
+            return 1
+        print(f"using latest tape: {csv_path}")
+
+    if not csv_path.exists():
+        print(f"missing: {csv_path}", file=sys.stderr)
+        return 1
+    if not INDEX_HTML.exists():
+        print(f"missing: {INDEX_HTML}", file=sys.stderr)
+        return 1
+
+    with csv_path.open("r", encoding="utf-8-sig", newline="") as f:
+        reader = csv.DictReader(f)
+        rows = [convert_row(r) for r in reader]
+
+    rows = [r for r in rows if r["id"]]
+    deals = aggregate_tranches(rows)
+
+    html = INDEX_HTML.read_text()
+    new_html = replace_block(html, render_block(deals, csv_path.name))
+    INDEX_HTML.write_text(new_html)
+
+    outstanding_total = sum(
+        d["fund_outstanding"] for d in deals if d.get("fund_outstanding") is not None
+    )
+    print(
+        f"refreshed FUND2_DEALS in index.html: {len(deals)} positions, "
+        f"${outstanding_total:,.2f} Fund II outstanding"
+    )
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
