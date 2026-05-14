@@ -1245,6 +1245,9 @@ body.tier-1 #sec-fit { display: none !important; }
    Payment Analysis pills remain visible — same 3 as Tier 2 today. */
 body.tier-1 #viewSummaryScenario { display: none !important; }
 
+/* Fund II filter is a Tier 2 (full-access) feature — hide for Tier 1. */
+body.tier-1 #filterFund { display: none !important; }
+
 /* Request Full Access CTA: Tier 1 only */
 .tier-1-cta { display: none; }
 body.tier-1 .tier-1-cta {
@@ -2595,6 +2598,13 @@ const OBS_MONTH_STR = "2026-04";
 // this constant is migrated to Supabase like PMT_DATA was. Tier 1's rendered
 // table/modal builds from PMT_DATA.tape, which the backend serves with name
 // nulled; the source-leak here is a known, accepted limitation.
+//
+// Same caveat applies to FUND2_DEALS (between the @fund2-data sentinels
+// further down): sponsor names, borrower_last, city_state, and DocSend URLs
+// are inline and visible via View Source. The Tier 1 UI hides the Fund II
+// dropdown so the data is unreachable through the rendered interface, but
+// the HTML payload itself is not redacted. Migrate FUND2_DEALS server-side
+// alongside RAW when ready.
 const RAW = [
   {id:"1284",name:"RBG Pine Associates LLC",asset:"Multifamily",type:"Cash Flow Assignment",vintage:2026,advance:1000000.0,collected:31666.67,outstanding:973389.35,monthlyPmt:15833.33,irr:21.0,ltv:71.46,dscr:2.15,status:"Open",term:12,fundDate:"2026-01"},
   {id:"1283",name:"Boudinot Ohio Limited Partnership",asset:"Multifamily",type:"Preferred Equity",vintage:2026,advance:250000.0,collected:13437.12,outstanding:241666.66,monthlyPmt:6718.56,irr:23.0,ltv:64.9,dscr:2.58,status:"Open",term:60,fundDate:"2026-01"},
