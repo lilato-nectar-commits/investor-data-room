@@ -1248,26 +1248,46 @@ body.tier-1 #viewSummaryScenario { display: none !important; }
 /* Fund II filter is a Tier 2 (full-access) feature — hide for Tier 1. */
 body.tier-1 #filterFund { display: none !important; }
 
-/* Request Full Access CTA: Tier 1 only */
-.tier-1-cta { display: none; }
+/* Request Full Access CTA: Tier 1 only. Floats in the bottom-right corner
+   of the viewport regardless of where the <a> sits in the DOM (currently
+   inside #topnav for historical reasons). z-index 500 keeps it above page
+   content but below the deal modal (1000/1001) and the auth overlays /
+   signed-in indicator (9000+). The signed-in indicator is top-right so
+   there's no visual collision with this bottom-right pill. */
+.tier-1-cta {
+  display: none;
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 500;
+  padding: 14px 22px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: white;
+  font-family: 'Manrope', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  box-shadow: 0 4px 16px rgba(151, 27, 255, 0.35), 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  white-space: nowrap;
+}
+.tier-1-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(151, 27, 255, 0.45), 0 3px 6px rgba(0, 0, 0, 0.15);
+}
 body.tier-1 .tier-1-cta {
   display: inline-flex;
   align-items: center;
-  margin-left: auto;
-  margin-right: 18px;
-  padding: 8px 16px;
-  background: linear-gradient(135deg, #971BFF, #3302F7);
-  color: #ffffff;
-  text-decoration: none;
-  border-radius: 6px;
-  font-family: 'Manrope', sans-serif;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: .02em;
-  transition: opacity .15s;
-  white-space: nowrap;
 }
-body.tier-1 .tier-1-cta:hover { opacity: .88; }
+@media (max-width: 600px) {
+  .tier-1-cta {
+    bottom: 16px;
+    right: 16px;
+    padding: 12px 18px;
+    font-size: 13px;
+  }
+}
 
 </style>
 </head>
